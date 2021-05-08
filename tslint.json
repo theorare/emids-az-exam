@@ -3,13 +3,12 @@
   "rules": {
     "align": {
       "options": [
-        "parameters",
-        "statements"
+        "parameters"
       ]
     },
     "array-type": false,
-    "arrow-return-shorthand": true,
-    "curly": true,
+    "arrow-return-shorthand": false,
+    "curly": false,
     "deprecation": {
       "severity": "warning"
     },
@@ -28,7 +27,7 @@
       "app",
       "kebab-case"
     ],
-    "eofline": true,
+    "eofline": false,
     "import-blacklist": [
       true,
       "rxjs/Rx"
