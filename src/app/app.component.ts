@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
+import { PatientDetail } from './model/patient.model';
+import { PatientService } from './service/patient-data.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private patientService: PatientService) { }
 
   title = 'emids-az-exam';
   public patientForm: FormGroup;
@@ -15,8 +17,8 @@ export class AppComponent implements OnInit {
     this.patientForm = this.formBuilder.group({
       patientId: [''],
       patientName: ['', [Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50)]],
+      Validators.minLength(3),
+      Validators.maxLength(50)]],
       patientDob: [''],
       patientEmail: ['', [Validators.required]],
       patientImage: ['', this.urlValidator]
@@ -24,8 +26,28 @@ export class AppComponent implements OnInit {
 
   }
 
-  addPatient(): any {
-    return this.patientForm;
+  viewJson(): any {
+    return this.patientForm.value;
+  }
+
+  async addPatient(): Promise<void> {
+    let formValue = this.patientForm.value;
+    let patientDetailRequest = new PatientDetail({
+      id: formValue.patientId,
+      name: formValue.patientName,
+      dateOfBirth: formValue.patientDob,
+      emailId: formValue.patientEmail,
+      imageUrl: formValue.patientImage
+    });
+    await this.patientService
+      .upsertPatientData(patientDetailRequest)
+      .then((response) => {
+        console.log(response);
+        alert(response);
+      })
+      .catch((errors) => {
+        console.log(errors);
+      });
   }
 
   get patient(): any {

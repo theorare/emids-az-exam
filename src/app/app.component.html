@@ -43,7 +43,7 @@
 
   <div class="row custom-wrapper">
     <div class="col-md-12">
-      <form [formGroup]="patientForm" (ngSubmit)="addPatient()">
+      <form [formGroup]="patientForm">
         <!-- Name block -->
         <div class="mb-3">
           <div>
@@ -122,7 +122,7 @@
 
 
   <div>
-    {{addPatient()?.value | json}}
+    {{viewJson() | json}}
   </div>
 
 

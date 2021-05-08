@@ -1,0 +1,7 @@
+{
+    "environment": "local",
+    "timeoutMinutes": 60,
+    "versionNumber": "1.0.0",
+    "functionApiUrl": "https://func-emids-bth.azurewebsites.net/api"
+  }
+  
