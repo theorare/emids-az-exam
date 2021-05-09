@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
 import { CellClickedEvent, CellValueChangedEvent, EditableCallbackParams, GridApi, GridOptions, ValueFormatterParams } from 'ag-grid-community';
 import { PatientDetail } from 'src/app/model/patient.model';
 import { PatientService } from 'src/app/service/patient-data.service';
@@ -8,8 +8,8 @@ import { PatientService } from 'src/app/service/patient-data.service';
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.scss']
 })
-export class PatientListComponent implements OnInit {
-
+export class PatientListComponent implements OnChanges {
+  @Input() newRecordFound: boolean;
   public gridOptions: GridOptions;
   public gridApi: GridApi;
   public gridColumnApi;
@@ -29,7 +29,10 @@ export class PatientListComponent implements OnInit {
     this.initGrid();
   }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.newRecordFound && changes.newRecordFound.currentValue) {
+      this.loadGridData();
+    }
   }
 
   async updatePatientData(column: string, data: any): Promise<boolean> {
@@ -75,10 +78,6 @@ export class PatientListComponent implements OnInit {
       .getAllPatientData()
       .then((response: PatientDetail[]) => {
         console.log('Grid rows -> ', response);
-        // response.forEach((item) => {
-        //   if(item.imageUrl.length > 0 && this.imageExists(item.imageUrl))
-        //     item.imageExists = true;
-        // });
         this.gridOptions.api.setRowData(response);
         this.gridApi.hideOverlay();
       }

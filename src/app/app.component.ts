@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   title = 'emids-az-exam';
   public patientForm: FormGroup;
-
+  newRecordFound: boolean = false;
   ngOnInit(): void {
     this.patientForm = this.formBuilder.group({
       patientId: [''],
@@ -43,8 +43,10 @@ export class AppComponent implements OnInit {
       .upsertPatientData(patientDetailRequest)
       .then((response) => {
         console.log(response);
-        alert(response);
+        this.newRecordFound = true;
+        alert('Record for patient ' + response.name + ' has been created. Scroll below to view the list');
         this.resetForm();
+        
       })
       .catch((errors) => {
         console.log(errors);
@@ -61,6 +63,7 @@ export class AppComponent implements OnInit {
       this.patientForm.controls[c].reset();
       this.patientForm.controls[c].setValue('');
     });
+    // this.newRecordFound = false;
   }
 
   urlValidator: ValidatorFn = (control: AbstractControl) => {

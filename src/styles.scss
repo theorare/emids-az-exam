@@ -18,6 +18,10 @@
     }
     &:active {
       background:darken($bg,25%);
+    }
+    &:disabled {
+       color: darken($bg, 30);
+       background: lighten($bg, 40%);
     } 
   }
   
