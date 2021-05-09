@@ -19,17 +19,17 @@ export class PatientListComponent implements OnInit {
 
   constructor(private patientService: PatientService) {
     this.columnDefs = [
-      { field: 'name', filter: true, width: 300 },
-      { field: 'dateOfBirth', headerName: 'Birthday', filter: 'agDateColumnFilter', filterParams: this.filterParams, width: 200 },
-      { field: 'emailId', filter: true, width: 380 },
-      { field: 'imageUrl', filter: true, width: 550 },
-      { field: 'delete' },
+      { field: 'name', filter: true, width: 300, cellClass: "grid-cell-centered"},
+      { field: 'dateOfBirth', headerName: 'Birthday', filter: 'agDateColumnFilter', filterParams: this.filterParams, width: 200
+            , cellClass: "grid-cell-centered"},
+      { field: 'emailId', filter: true, width: 380, cellClass: "grid-cell-centered"},
+      { field: 'imageUrl', filter: true, width: 200, cellClass: "grid-cell-centered"},
+      { field: 'delete', cellClass: "grid-cell-centered"},
     ];
     this.initGrid();
   }
 
   ngOnInit() {
-
   }
 
   async updatePatientData(column: string, data: any): Promise<boolean> {
@@ -70,11 +70,17 @@ export class PatientListComponent implements OnInit {
   }
 
   loadGridData() {
+    this.gridApi.showLoadingOverlay();
     this.patientService
       .getAllPatientData()
       .then((response: PatientDetail[]) => {
         console.log('Grid rows -> ', response);
+        // response.forEach((item) => {
+        //   if(item.imageUrl.length > 0 && this.imageExists(item.imageUrl))
+        //     item.imageExists = true;
+        // });
         this.gridOptions.api.setRowData(response);
+        this.gridApi.hideOverlay();
       }
       );
   }
@@ -83,7 +89,13 @@ export class PatientListComponent implements OnInit {
     this.gridOptions = {
       defaultColDef: {
         autoHeight: true,
+        wrapText: true,
         floatingFilter: true,
+        cellStyle: (params) => { 
+          if (params.colDef.field !== 'imageUrl') {
+              return {marginTop: '33px'};
+          }
+        },
         editable: (params: EditableCallbackParams) => {
           if (params.colDef.field !== 'delete') {
             return true;
@@ -92,6 +104,11 @@ export class PatientListComponent implements OnInit {
         cellRenderer: (params) => {
           if (params.colDef.field === 'delete')
             return '<i class="fa fa-trash-o" style="font-size:24px;color:red"></i>';
+          else if (params.colDef.field === 'imageUrl') {
+            let noImageUrl = 'https://cdn.iconscout.com/icon/free/png-256/no-image-1771002-1505134.png';
+              return '<img src = "' + params.value + '" alt="" border=3 height=100 width=100'
+              + ' onerror="this.onerror=null;this.src=\'' + noImageUrl + '\';" />';
+          }
           return params.value;
         }
       },
@@ -108,7 +125,7 @@ export class PatientListComponent implements OnInit {
       columnDefs: this.columnDefs,
       onCellValueChanged: (event: CellValueChangedEvent) => {
         if (typeof event.newValue === "string" &&
-          this.regexValidate(event.colDef.field, event.newValue)) {
+          this.validateDataValues(event.colDef.field, event.newValue)) {
           // Update changes
           console.log('Cell value of ' + event.colDef.field + ' has changed: ' + event.oldValue + ' -> ' + event.newValue);
           event.node.data[event.colDef.field] = event.newValue;
@@ -125,18 +142,14 @@ export class PatientListComponent implements OnInit {
         if (event.colDef.field === 'delete') {
           if (confirm('Patient record of ' + event.data.name + ' will be deleted. Confirm!')) {
             // Delete
-            console.log('Thing was saved to the database.');
             this.deletePatientData(event.colDef.field, event.data);
-          } else {
-            // Do nothing!
-            console.log('Thing was not saved to the database.');
           }
         }
       }
     };
   }
 
-  regexValidate(type: string, newValue: string): boolean {
+  validateDataValues(type: string, newValue: string): boolean {
     switch (type) {
       case 'name': {
         if (newValue && newValue.length > 2 && newValue.length < 51)
@@ -145,9 +158,40 @@ export class PatientListComponent implements OnInit {
           alert('Name is required and should be within the range of characters 3 and 50');
         break;
       }
+      case 'dateOfBirth': {
+        if (newValue && newValue.length > 0
+          && new RegExp(/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/).test(newValue))
+          return true;
+        else
+          alert('Date of birth should be in dd/MM/yyyy format');
+        break;
+      }
+      case 'emailId': {
+        if (newValue && newValue.length > 0
+          && new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(newValue))
+          return true;
+        else
+          alert('Valid email should be entered');
+        break;
+      }
+      case 'imageUrl': {
+        if (newValue && newValue.length > 0
+          && new RegExp('([a-z.]{2,6})[/\\w .-]*/?').test(newValue))
+          return true;
+        else
+          alert('Valid Url should be entered');
+        break;
+      }
 
     }
     return false;
+  }
+
+  imageExists = (url: string) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open("HEAD", url, false);
+    xhr.send();
+    return (xhr.status !== 404);
   }
 
   filterParams = {

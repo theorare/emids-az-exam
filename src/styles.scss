@@ -1,3 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+
+// Layout
+.grid-layout {
+   display: grid;
+   justify-content: center;
+   text-align: center;
+}
+
+// Buttons
+@mixin button-bg($bg) {
+    background: $bg;
+    &:hover {
+      background:darken($bg,8%);
+      transition: all 0.3s ease;
+    }
+    &:active {
+      background:darken($bg,25%);
+    } 
+  }
+  
+  .btn {
+   color:white;
+   text-decoration:none;
+   padding:5px 10px;
+   border-radius:3px;
+   font-family: 'Quicksand', sans-serif;
+   font-size:14px;
+  }
+  
+  .btn-green {
+     @include button-bg(#2ecc71);
+  }
+  
+  .btn-blue {
+     @include button-bg(#3498db);
+  }
+  
+  .btn-yellow{
+     @include button-bg(#f1c40f);
+  }
+  
+  .btn-red {
+     @include button-bg(#e74c3c);
+  }

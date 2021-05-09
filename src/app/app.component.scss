@@ -19,6 +19,13 @@ body {
   background: #F5F5F6;
 }
 
+.button-group {
+  display: flex;
+  padding: 20px;
+  gap: 30px;
+  justify-content: center;
+}
+
 .jumbotron {
   padding: 20px 2rem 27px;
   background: #312BC6;
@@ -40,7 +47,7 @@ h5 {
 
 .custom-wrapper {
   max-width: 460px;
-  margin: 0 auto 150px;
+  margin: 0 auto 50px;
 }
 
 .h2,

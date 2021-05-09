@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
       .then((response) => {
         console.log(response);
         alert(response);
+        this.resetForm();
       })
       .catch((errors) => {
         console.log(errors);
@@ -52,6 +53,14 @@ export class AppComponent implements OnInit {
 
   get patient(): any {
     return this.patientForm.controls;
+  }
+
+  resetForm() {
+    let controlKeys = Object.keys(this.patientForm.controls) || [];
+    controlKeys.forEach((c: string) => {
+      this.patientForm.controls[c].reset();
+      this.patientForm.controls[c].setValue('');
+    });
   }
 
   urlValidator: ValidatorFn = (control: AbstractControl) => {

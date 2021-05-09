@@ -6,7 +6,7 @@ export class PatientDetail implements IPatientDetail {
     dateOfBirth?: string;
     emailId?: string;
     imageUrl?: string;
-    patientCollection?: IPatientDetail[];
+    imageExists?: boolean;
 
     constructor(
         options: {
@@ -15,7 +15,7 @@ export class PatientDetail implements IPatientDetail {
             dateOfBirth?: string;
             emailId?: string;
             imageUrl?: string;
-            patientCollection?: IPatientDetail[];
+            imageExists?: boolean;
         } = {}
     ) {
         this.id = options.id || '';
@@ -23,6 +23,6 @@ export class PatientDetail implements IPatientDetail {
         this.dateOfBirth = options.dateOfBirth || '';
         this.emailId = options.emailId || '';
         this.imageUrl = options.imageUrl || '';
-        this.patientCollection = options.patientCollection || [];
+        this.imageExists = options.imageExists || false;
     }
 }

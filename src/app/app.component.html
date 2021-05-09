@@ -38,8 +38,10 @@
   </div> -->
 
   <!-- Form -->
-  <b>Patient Form</b>
+  <div class="grid-layout">
+    <h2>Patient Form</h2>
   <p>Create a patient using form and modify in the table below:</p>
+  </div>
 
   <div class="row custom-wrapper">
     <div class="col-md-12">
@@ -58,8 +60,7 @@
           <div class="invalid-feedback" *ngIf="patient.patientName.touched && patient.patientName.errors?.required">
             <sup>*</sup>Name is required
           </div>
-          <div class="invalid-feedback"
-            *ngIf="patient.patientName.touched && patient.patientName.errors?.minlength">
+          <div class="invalid-feedback" *ngIf="patient.patientName.touched && patient.patientName.errors?.minlength">
             <sup>*</sup>Name must be atleast 3 characters long
           </div>
           <div class="invalid-feedback" *ngIf="patient.patientName.errors?.maxlength">
@@ -111,19 +112,20 @@
         </div>
 
 
-        <div>
-          <button id="submitPatient" [disabled]="patientForm.status !== 'VALID'" (click)="addPatient()">Add
-            Patient</button>
+        <div class="button-group">
+          <div>
+            <button id="submitPatient" class="btn btn-blue" [disabled]="patientForm.status !== 'VALID'" 
+            (click)="addPatient()">Add Patient</button>
+          </div>
+          <div>
+            <button id="clearForm" class="btn btn-red" (click)="resetForm()">Reset</button>
+          </div>
         </div>
       </form>
     </div>
-  
-  
-    <div>
-      {{viewJson() | json}}
-    </div>
+
   </div>
-  
+
 
   <div>
     <app-patient-list></app-patient-list>
