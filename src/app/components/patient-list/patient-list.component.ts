@@ -19,18 +19,30 @@ export class PatientListComponent implements OnChanges {
 
   constructor(private patientService: PatientService) {
     this.columnDefs = [
-      { field: 'name', filter: true, width: 300, cellClass: "grid-cell-centered"},
-      { field: 'dateOfBirth', headerName: 'Birthday', filter: 'agDateColumnFilter', filterParams: this.filterParams, width: 200
-            , cellClass: "grid-cell-centered"},
-      { field: 'emailId', filter: true, width: 380, cellClass: "grid-cell-centered"},
-      { field: 'imageUrl', filter: true, width: 200, cellClass: "grid-cell-centered"},
-      { field: 'delete', cellClass: "grid-cell-centered"},
+      {
+        field: 'name', filter: true, width: 300, cellClass: "grid-cell-centered", sortable: true, 
+        sort: 'asc', sortingOrder: ['asc', 'desc'],
+        comparator: (a, b) => {
+          if (typeof a === 'string') {
+            return a.localeCompare(b);
+          } else {
+            return a > b ? 1 : a < b ? -1 : 0;
+          }
+        }
+      },
+      {
+        field: 'dateOfBirth', headerName: 'Birthday', filter: 'agDateColumnFilter', filterParams: this.filterParams, width: 200
+        , cellClass: "grid-cell-centered"
+      },
+      { field: 'emailId', filter: true, width: 380, cellClass: "grid-cell-centered" },
+      { field: 'imageUrl', filter: true, width: 200, cellClass: "grid-cell-centered" },
+      { field: 'delete', cellClass: "grid-cell-centered" },
     ];
     this.initGrid();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.newRecordFound && changes.newRecordFound.currentValue) {
+    if (changes?.newRecordFound && changes.newRecordFound.currentValue) {
       this.loadGridData();
     }
   }
@@ -90,13 +102,13 @@ export class PatientListComponent implements OnChanges {
         autoHeight: true,
         wrapText: true,
         floatingFilter: true,
-        cellStyle: (params) => { 
+        cellStyle: (params) => {
           if (params.colDef.field !== 'imageUrl') {
-              return {marginTop: '33px'};
+            return { marginTop: '33px' };
           }
         },
         editable: (params: EditableCallbackParams) => {
-          if (params.colDef.field !== 'delete') {
+          if (params.colDef.field !== 'delete' && params.colDef.field !== 'emailId') {
             return true;
           }
         },
@@ -105,7 +117,7 @@ export class PatientListComponent implements OnChanges {
             return '<i class="fa fa-trash-o" style="font-size:24px;color:red"></i>';
           else if (params.colDef.field === 'imageUrl') {
             let noImageUrl = 'https://cdn.iconscout.com/icon/free/png-256/no-image-1771002-1505134.png';
-              return '<img src = "' + params.value + '" alt="" border=3 height=100 width=100'
+            return '<img src = "' + params.value + '" alt="" border=3 height=100 width=100'
               + ' onerror="this.onerror=null;this.src=\'' + noImageUrl + '\';" />';
           }
           return params.value;
