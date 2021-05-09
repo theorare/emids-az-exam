@@ -1,0 +1,10 @@
+<div class="grid-layout">
+    <h3>Double click and update the values. Use the filter to find data.</h3>
+    <button id="refreshGrid" style="justify-content: right;" (click)="loadGridData()">Click to Refresh the Grid</button>
+</div>
+<div id="ag-grid-list" class="grid-layout">
+    
+    <ag-grid-angular class="ag-theme-alpine" style="width: 1000px; height: 500px;"
+        (gridReady)="onGridReady($event)" [rowData]="rowData" [columnDefs]="columnDefs" [gridOptions]="gridOptions">
+    </ag-grid-angular>
+</div>

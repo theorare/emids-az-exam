@@ -182,12 +182,12 @@ export class GenericApiService<TData> {
         let data;
 
         if (!createModelFunc) {
-            data = (response.data as dataType) || {};
-        } else if (response && response.data) {
-            if (typeof response.data !== 'object') {
-                response.data = JsonUtils.tryParseJSON(response.data);
+            data = (response as dataType) || {};
+        } else if (response) {
+            if (typeof response !== 'object') {
+                response = JsonUtils.tryParseJSON(response);
             }
-            data = createModelFunc(response.data);
+            data = createModelFunc(response);
         }
 
         return data;

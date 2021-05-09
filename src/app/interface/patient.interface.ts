@@ -4,4 +4,5 @@ export interface IPatientDetail {
     dateOfBirth?: string;
     emailId?: string;
     imageUrl?: string;
+    rowId?: number;
 }

@@ -20,7 +20,26 @@ export class PatientService extends GenericApiService<PatientDetail> {
             .post(this.getUrlPrefix() + `patient/upsert`, patientInformation)
             .pipe(
                 map((response) => this.extractCustomData<PatientDetail>(response)),
-                debounceTime(500),
+                catchError((error) => this.handleError(error))
+            )
+            .toPromise();
+    }
+
+    deletePatientData(patientInformation: IPatientDetail): Promise<PatientDetail> {
+        return this.http
+            .post(this.getUrlPrefix() + `patient/delete`, patientInformation)
+            .pipe(
+                map((response) => this.extractCustomData<PatientDetail>(response)),
+                catchError((error) => this.handleError(error))
+            )
+            .toPromise();
+    }
+
+    getAllPatientData(): Promise<PatientDetail[]> {
+        return this.http
+            .get(this.getUrlPrefix() + `patients`)
+            .pipe(
+                map((response) => this.extractCustomData<PatientDetail[]>(response)),
                 catchError((error) => this.handleError(error))
             )
             .toPromise();
